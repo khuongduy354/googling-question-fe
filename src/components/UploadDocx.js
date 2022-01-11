@@ -1,31 +1,56 @@
 import { useState, Fragment } from "react";
+import axios from "axios";
 const UploadDocx = () => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Choose File");
   const [uploadedFile, setUploadedFile] = useState({});
+  const [searchList, setSearchList] = useState([]);
+  const [beginCount, setBeginCount] = useState(0);
 
   const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
 
-  const readFile = (file) => {
-    const fileHandler = (e) => {
-      const url = e.target.result;
-      console.log(url);
-    };
-    const reader = new FileReader();
-    reader.addEventListener("load", (e) => {
-      fileHandler(e);
-    });
-    reader.readAsDataURL(file);
-  };
-
   const onSubmit = async (e) => {
-    readFile(file);
     e.preventDefault();
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      const res = await axios.post(
+        "http://localhost:8000" + "/formatDoc",
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setSearchList(res.data.searchList);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
+  const handleSearch = () => {
+    for (let i = beginCount; i <= beginCount + 5; i++) {
+      const url = searchList[i];
+      window.open(url, "_blank");
+    }
+    setBeginCount(beginCount + 6);
+  };
+  const renderSearchList = () => {
+    return (
+      <Fragment>
+        <button onClick={handleSearch}>click to search</button>
+        {searchList.map((list, index) => (
+          <a style={{ display: "block" }} href={list} target={"_blank"}>
+            Câu {index}
+          </a>
+        ))}
+      </Fragment>
+    );
+  };
   return (
     <Fragment>
       <form onSubmit={onSubmit}>
@@ -47,6 +72,8 @@ const UploadDocx = () => {
           className="btn btn-primary btn-block mt-4"
         />
       </form>
+
+      {searchList.length !== 0 && renderSearchList()}
     </Fragment>
   );
 };
