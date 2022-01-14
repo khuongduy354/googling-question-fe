@@ -7,7 +7,7 @@ const UploadDocx = () => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Choose File");
   const [searchList, setSearchList] = useState([]);
-  const [beginCount, setBeginCount] = useState(0);
+  const [beginCount, setBeginCount] = useState(1);
   const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
@@ -24,7 +24,7 @@ const UploadDocx = () => {
         setSearchList(res.data.solutionList);
       } else {
         const res = await fetchFormatDoc(form);
-        setSearchList(res.data);
+        setSearchList(res.data.questionList);
       }
     } catch (e) {
       console.log(e);
@@ -32,22 +32,42 @@ const UploadDocx = () => {
   };
 
   const renderSearchList = () => {
+    const gap = searchList.length - beginCount;
+    if (beginCount + 4 > searchList.length) {
+      setBeginCount(1);
+    }
+    const endCount = gap > 5 ? beginCount + 4 : beginCount + gap;
     const handleSearch = () => {
-      for (let i = beginCount; i <= beginCount + 5; i++) {
-        const url = searchList[i];
+      for (let i = beginCount; i <= endCount; i++) {
+        const url = searchList[i - 1];
         window.open(url, "_blank");
       }
-      setBeginCount(beginCount + 6);
+      setBeginCount(beginCount + 5);
+    };
+    const handleSearchAll = () => {
+      searchList.forEach((el) => window.open(el, "_blank"));
     };
     return (
       <Fragment>
         <button onClick={handleSearch}>click to search</button>
         <p>
-          Search from: {beginCount} to {beginCount + 5}{" "}
+          Search from: {beginCount} to {endCount}{" "}
+          <input
+            type={"number"}
+            onChange={(e) => {
+              setBeginCount(e.target.value);
+            }}
+          />
         </p>
+        <button onClick={handleSearchAll}>Click to search all at once</button>
         {searchList.length !== 0 &&
           searchList.map((list, index) => (
-            <a style={{ display: "block" }} href={list} target={"_blank"}>
+            <a
+              key={index}
+              style={{ display: "block" }}
+              href={list}
+              target={"_blank"}
+            >
               Câu {index + 1}
             </a>
           ))}
@@ -55,33 +75,35 @@ const UploadDocx = () => {
     );
   };
   const renderSuggestedSolutions = () => {
-    console.log(searchList);
     const renderSuggestedSolution = (content) => {
       return (
         <Fragment>
           <ul>
-            {content.options.map((option) => (
-              <li>{option}</li>
+            {content.options.map((option, index) => (
+              <li key={index}>{option}</li>
             ))}
           </ul>
-          <h1>{content.correct}</h1>
-          <h1> {content.explain}</h1>
+          <h3> {"->" + content.correct}</h3>
+          <p>
+            {" "}
+            <strong>Explain </strong> {content.explain}
+          </p>
         </Fragment>
       );
     };
     return (
       <Fragment>
         {searchList.map((item, index) => (
-          <Fragment>
-            <a
-              style={{ display: "block" }}
-              href={item.searchLink}
-              target={"_blank"}
-            >
-              Câu {index + 1}: {item.originalQuestion}
-            </a>
+          <Fragment key={index}>
+            <span style={{ display: "block" }}>
+              <a href={item.searchLink} target={"_blank"}>
+                Câu {index + 1}:{" "}
+              </a>
+              {item.originalQuestion}
+            </span>
+
             {item.scrapeLink && <a href={item.scrapeLink}>Nguồn kết quả</a>}
-            {/* {item.content !== "" && renderSuggestedSolution(item.content)} */}
+            {item.content && renderSuggestedSolution(item.content)}
           </Fragment>
         ))}
       </Fragment>
@@ -126,7 +148,7 @@ const UploadDocx = () => {
         />
       </form>
 
-      {/*  {searchList.length !== 0 && !scrapeMode && renderSearchList()} */}
+      {searchList.length !== 0 && !scrapeMode && renderSearchList()}
       {scrapeMode && searchList.length !== 0 && renderSuggestedSolutions()}
     </Fragment>
   );
