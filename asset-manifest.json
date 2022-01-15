@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/googling-question-fe/static/css/main.e6c13ad2.css",
-    "main.js": "/googling-question-fe/static/js/main.d0252f10.js",
+    "main.js": "/googling-question-fe/static/js/main.76220870.js",
     "static/js/787.4347a60a.chunk.js": "/googling-question-fe/static/js/787.4347a60a.chunk.js",
     "index.html": "/googling-question-fe/index.html",
     "main.e6c13ad2.css.map": "/googling-question-fe/static/css/main.e6c13ad2.css.map",
-    "main.d0252f10.js.map": "/googling-question-fe/static/js/main.d0252f10.js.map",
+    "main.76220870.js.map": "/googling-question-fe/static/js/main.76220870.js.map",
     "787.4347a60a.chunk.js.map": "/googling-question-fe/static/js/787.4347a60a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.d0252f10.js"
+    "static/js/main.76220870.js"
   ]
 }
