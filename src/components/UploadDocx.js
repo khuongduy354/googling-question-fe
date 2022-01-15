@@ -18,7 +18,7 @@ const UploadDocx = () => {
     } else {
       setEndCount(parseInt(beginCount) + 4);
     }
-  }, [beginCount]);
+  }, [beginCount, searchList]);
   const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
@@ -36,6 +36,8 @@ const UploadDocx = () => {
       } else {
         const res = await fetchFormatDoc(form);
         setSearchList(res.data.questionList);
+
+        console.log(searchList);
       }
     } catch (e) {
       console.log(e);
