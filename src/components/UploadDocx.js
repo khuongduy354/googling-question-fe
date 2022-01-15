@@ -1,4 +1,4 @@
-import { useRef, useState, Fragment } from "react";
+import { useRef, useState, Fragment, useEffect } from "react";
 import { fetchFormatDoc } from "../api/fetchFormatDoc";
 import { fetchScrape } from "../api/fetchScrape";
 const UploadDocx = () => {
@@ -8,6 +8,17 @@ const UploadDocx = () => {
   const [filename, setFilename] = useState("Choose File");
   const [searchList, setSearchList] = useState([]);
   const [beginCount, setBeginCount] = useState(1);
+  const [endCount, setEndCount] = useState(5);
+  useEffect(() => {
+    if (beginCount < 1 || beginCount > searchList.length) {
+      setBeginCount(1);
+    }
+    if (parseInt(beginCount) + 4 > searchList.length) {
+      setEndCount(searchList.length);
+    } else {
+      setEndCount(parseInt(beginCount) + 4);
+    }
+  }, [beginCount]);
   const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
@@ -32,11 +43,6 @@ const UploadDocx = () => {
   };
 
   const renderSearchList = () => {
-    const gap = searchList.length - beginCount;
-    if (beginCount + 4 > searchList.length) {
-      setBeginCount(1);
-    }
-    const endCount = gap > 5 ? beginCount + 4 : beginCount + gap;
     const handleSearch = () => {
       for (let i = beginCount; i <= endCount; i++) {
         const url = searchList[i - 1];
@@ -51,13 +57,26 @@ const UploadDocx = () => {
       <Fragment>
         <button onClick={handleSearch}>click to search</button>
         <p>
-          Search from: {beginCount} to {endCount}{" "}
-          <input
-            type={"number"}
-            onChange={(e) => {
-              setBeginCount(e.target.value);
-            }}
-          />
+          Search from:{" "}
+          {
+            <input
+              type={"number"}
+              value={beginCount}
+              onChange={(e) => {
+                setBeginCount(e.target.value);
+              }}
+            />
+          }{" "}
+          to{" "}
+          {
+            <input
+              type={"number"}
+              value={endCount}
+              onChange={(e) => {
+                setEndCount(e.target.value);
+              }}
+            />
+          }{" "}
         </p>
         <button onClick={handleSearchAll}>Click to search all at once</button>
         {searchList.length !== 0 &&
