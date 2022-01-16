@@ -12,3 +12,4 @@ Câu 3: ....
 - Choose file -> Upload
 - Sau khi có kết quả, bấm nút để search từng đoạn (có thể tùy chỉnh)  hoặc search all 
 - Tính năng scrape chỉ để thử nghiệm, tốt nhất nên bỏ chọn trước khi upload file 
+- Keyword ( từ khóa ) là những từ như: Câu, Question, Sentence,... ở trước số của mỗi câu hỏi, mặc định là "Câu" cho format Câu 1 Câu 2, có thể đổi thành Question 1 Question 2,... tùy theo file đề 
