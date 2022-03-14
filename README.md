@@ -2,6 +2,9 @@
 
 https://khuongduy354.github.io/googling-question-fe/
 
+# Xem chi tiết hơn tại 
+https://github.com/khuongduy354/googling-questions-be
+
 # Để sử dụng: 
 - File phải có định dạng .docx ( khác đều ko đc, kể cả doc ) 
 - Nội dung file phải theo format: 
